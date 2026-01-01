@@ -2,14 +2,14 @@
 name: Release
 
 # 最简单：所有推送都触发（测试用）
-on: [push, workflow_dispatch]
+# on: [push, workflow_dispatch]
 
 # 或者指定分支：
-# on:
-#   push:
-#     branches: [main, master]
-#   pull_request:
-#     branches: [main, master]
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
   test-release:
