@@ -1,70 +1,49 @@
 # .github/workflows/release.yml
 name: Release
 
-# 最简单：所有推送都触发（测试用）
-# on: [push, workflow_dispatch]
-
-# 或者指定分支：
 on:
   push:
     branches: [main, master]
-  pull_request:
-    branches: [main, master]
+  workflow_dispatch:
+
+# 全局权限设置
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
 
 jobs:
-  test-release:
+  version-and-release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-    
     steps:
-      # 1. 检查代码
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      # 2. 显示文件结构（调试用）
-      - name: Show directory structure
-        run: |
-          echo "📁 项目结构："
-          ls -la
-          echo ""
-          echo "📁 .github/workflows 结构："
-          ls -la .github/workflows/ || echo "目录不存在"
-      
-      # 3. 设置 Node.js
+        with:
+          fetch-depth: 0
+          # 重要：使用有权限的 token
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
-      
-      # 4. 简单测试
-      - name: Test workflow
-        run: |
-          echo "✅ GitHub Actions 正常触发！"
-          echo "当前分支: ${{ github.ref }}"
-          echo "触发事件: ${{ github.event_name }}"
-          
-      # 5. 安装依赖
+
       - name: Install dependencies
-        run: |
-          echo "安装依赖..."
-          npm ci || npm install
-      
-      # 6. 运行测试
-      - name: Run tests
-        run: npm test
-      
-      # 7. 显示成功信息
-      - name: Success
-        run: |
-          echo "🎉 所有步骤完成！"
-          echo "接下来可以添加 changeset 发布步骤"
-      - name: Create Release
+        run: npm ci
+
+      - name: Create snapshot release
         uses: changesets/action@v1
         with:
-          publish: pnpm run release
+          # 版本和发布命令
+          version: npx changeset version
+          publish: npx changeset publish
+          # 提交信息
+          commit: '[ci] release packages'
+          # PR 标题
+          title: '[ci] release packages'
+          # 自动创建 GitHub Release
+          createGithubReleases: true
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.CHANGSET_DEMO }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
