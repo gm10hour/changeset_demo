@@ -29,7 +29,6 @@ jobs:
         
       - name: Publish
         run: |
-          echo "📦 发布版本: $(node -p "require('../package.json').version")"
           pnpm changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
