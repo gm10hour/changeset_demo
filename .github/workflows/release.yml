@@ -1,50 +1,62 @@
+# .github/workflows/release.yml
 name: Release
 
-on:
-  push:
-    branches: [main]
+# 最简单：所有推送都触发（测试用）
+on: [push, workflow_dispatch]
+
+# 或者指定分支：
+# on:
+#   push:
+#     branches: [main, master]
+#   pull_request:
+#     branches: [main, master]
 
 jobs:
-  release:
+  test-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
     
     steps:
-      # 1. 获取代码
+      # 1. 检查代码
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       
-      # 2. 设置 Node.js
+      # 2. 显示文件结构（调试用）
+      - name: Show directory structure
+        run: |
+          echo "📁 项目结构："
+          ls -la
+          echo ""
+          echo "📁 .github/workflows 结构："
+          ls -la .github/workflows/ || echo "目录不存在"
+      
+      # 3. 设置 Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://registry.npmjs.org/'
       
-      # 3. 设置 npm 认证
-      - name: Setup npm authentication
+      # 4. 简单测试
+      - name: Test workflow
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-          echo "registry=https://registry.npmjs.org/" >> .npmrc
-          echo "always-auth=true" >> .npmrc
-      
-      # 4. 安装依赖
+          echo "✅ GitHub Actions 正常触发！"
+          echo "当前分支: ${{ github.ref }}"
+          echo "触发事件: ${{ github.event_name }}"
+          
+      # 5. 安装依赖
       - name: Install dependencies
-        run: npm ci
+        run: |
+          echo "安装依赖..."
+          npm ci || npm install
       
-      # 5. 运行测试
+      # 6. 运行测试
       - name: Run tests
         run: npm test
       
-      # 6. 自动发布
-      - name: Create Release
-        uses: changesets/action@v1
-        with:
-          publish: npm run release
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 7. 显示成功信息
+      - name: Success
+        run: |
+          echo "🎉 所有步骤完成！"
+          echo "接下来可以添加 changeset 发布步骤"
