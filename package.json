@@ -1,24 +1,29 @@
 {
-	"name": "changeset_demo",
-	"version": "1.0.0",
-	"description": "My awesome package",
+  "name": "changeset_demo",
+  "version": "1.0.1",
+  "description": "My awesome package",
   "main": "index.js",
   "type": "module",
   "exports": "./index.js",
-  "files": ["index.js"],
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "test": "echo 'Running tests...' && exit 0",
     "changeset": "changeset",
     "version": "changeset version",
     "release": "changeset publish"
   },
-  "keywords": ["example", "package"],
+  "keywords": [
+    "example",
+    "package"
+  ],
   "author": "Your Name",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
-	"devDependencies": {
-		"@changesets/cli": "^2.29.8"
-	}
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8"
+  }
 }
