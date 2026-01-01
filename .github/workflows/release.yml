@@ -67,3 +67,4 @@ jobs:
           publish: pnpm run release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.CHANGSET_DEMO }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
