@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # 🔑 使用 Personal Access Token
+          # ✅ 使用 PAT_TOKEN
           token: ${{ secrets.PAT_TOKEN }}
 
       - name: Setup Node.js and pnpm
@@ -40,10 +40,17 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      - name: Release
+      - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
+          # ✅ 添加 setupGitUser: false 让 changeset 使用现有的 git 配置
+          setupGitUser: false
           publish: pnpm run release
+          version: pnpm run version
+          commit: '[ci] version packages'
+          title: 'chore: version packages'
+          branch: 'changeset-release/main'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # ✅ 确保使用 PAT_TOKEN
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
