@@ -4,53 +4,47 @@ name: Release
 on:
   push:
     branches: [main, master]
-  pull_request:
-    branches: [main, master]
-  # 允许手动触发
   workflow_dispatch:
 
-# 为整个工作流设置权限
 permissions:
   contents: write
   pull-requests: write
-  id-token: write  # 如果需要 OIDC
+  packages: write
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          # 获取完整历史，Changeset 需要
           fetch-depth: 0
-          # 使用触发 Actions 的 token
-          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js and pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: true
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
 
-      - name: Install Dependencies
-        run: npm ci
+      - name: Install dependencies
+        run: pnpm install
 
-      - name: Create Release Pull Request or Publish
-        id: changesets
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Release
         uses: changesets/action@v1
         with:
-          # 发布命令（在 package.json 中定义）
-          publish: npm run release
-          # 提交信息
-          commit: 'chore: version packages'
-          # PR 标题
-          title: 'chore: version packages'
-          # 创建 PR
-          createGithubReleases: true
+          publish: pnpm run release
         env:
-          # 必须使用 GITHUB_TOKEN
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # npm 发布 token
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
