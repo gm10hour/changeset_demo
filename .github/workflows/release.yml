@@ -37,6 +37,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
       
       # 4. 简单测试
       - name: Test workflow
@@ -60,3 +61,9 @@ jobs:
         run: |
           echo "🎉 所有步骤完成！"
           echo "接下来可以添加 changeset 发布步骤"
+      - name: Create Release
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run release
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.CHANGSET_DEMO }}
