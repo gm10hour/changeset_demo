@@ -19,8 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # 使用 GITHUB_TOKEN
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
 
       - name: Setup Node.js and pnpm
         uses: pnpm/action-setup@v2
@@ -34,10 +33,18 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
           
-      - name: Set Git identity
+      - name: Set Git identity and remote URL
         run: |
+          # 设置 Git 用户
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 重要：设置 remote URL 使用 PAT_TOKEN
+          git remote set-url origin https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git
+          
+          # 验证配置
+          echo "远程仓库 URL:"
+          git remote -v
 
       - name: Install dependencies
         run: pnpm install
@@ -48,6 +55,6 @@ jobs:
           setupGitUser: false
           publish: pnpm run release
         env:
-          # 使用 GITHUB_TOKEN
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 重要：使用相同的 PAT_TOKEN
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
