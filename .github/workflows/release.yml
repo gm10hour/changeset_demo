@@ -33,6 +33,10 @@ jobs:
         with:
           node-version: '20'
           cache: 'pnpm'
+      - name: Set Git identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Install dependencies
         run: pnpm install
@@ -40,17 +44,12 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      - name: Create Release Pull Request
+      - name: Release
         uses: changesets/action@v1
         with:
-          # ✅ 添加 setupGitUser: false 让 changeset 使用现有的 git 配置
+          # 关键：关闭自动设置
           setupGitUser: false
           publish: pnpm run release
-          version: pnpm run version
-          commit: '[ci] version packages'
-          title: 'chore: version packages'
-          branch: 'changeset-release/main'
         env:
-          # ✅ 确保使用 PAT_TOKEN
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
