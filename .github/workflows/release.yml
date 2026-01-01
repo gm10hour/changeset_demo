@@ -38,9 +38,6 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      - name: Build
-        run: pnpm run build
-
       - name: Release
         uses: changesets/action@v1
         with:
