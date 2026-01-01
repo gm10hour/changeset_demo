@@ -30,6 +30,12 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      # 在 GitHub Actions 工作流中
+      - name: Setup .npmrc
+        run: |
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
       - name: Publish to npm
         run: pnpm publish --no-git-checks
         env:
