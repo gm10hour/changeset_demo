@@ -1,43 +1,39 @@
-name: Release to npm
+name: Changesets
 
 on:
   push:
     branches:
       - main
-      - master
+
+env:
+  CI: true
 
 jobs:
-  release:
+  version:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout code repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org/'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: '8'
-
+          node-version: 20
+          cache: 'pnpm'
+      
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Run tests
-        run: pnpm test
-
-      # 在 GitHub Actions 工作流中
-      - name: Setup .npmrc
-        run: |
-          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-
-      - name: Publish to npm
-        run: pnpm publish --no-git-checks
+        run: pnpm install
+      
+      - name: Create and publish versions
+        uses: changesets/action@v1
+        with:
+          commit: "chore: update versions"
+          title: "chore: update versions"
+          publish: pnpm ci:publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

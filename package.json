@@ -12,7 +12,8 @@
     "test": "echo 'Running tests...' && exit 0",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "changeset publish"
+    "release": "changeset publish",
+    "ci:publish": "pnpm publish -r"
   },
   "keywords": [
     "example",
