@@ -21,6 +21,7 @@
   ],
   "author": "Your Name",
   "license": "MIT",
+  "packageManager": "pnpm@10.18.3",
   "publishConfig": {
     "access": "public"
   },
