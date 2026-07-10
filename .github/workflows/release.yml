@@ -30,7 +30,7 @@ jobs:
         run: pnpm install
       
       - name: Create and publish versions
-        uses: changesets/action@v1
+        uses: changesets/action@v1.9.0
         with:
           commit: "chore: update versions"
           title: "chore: update versions"
