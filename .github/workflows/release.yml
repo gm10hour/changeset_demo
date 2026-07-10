@@ -34,7 +34,8 @@ jobs:
         with:
           commit: "chore: update versions"
           title: "chore: update versions"
-          version: pnpm version
+          publish: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
