@@ -1,5 +1,12 @@
 # changeset_demo
 
+## 1.0.5
+
+### Patch Changes
+
+- 8e17387: readme 文件修改
+- 3d8073b: release 修改
+
 ## 1.0.4
 
 ### Patch Changes
