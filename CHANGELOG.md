@@ -1,5 +1,11 @@
 # changeset_demo
 
+## 1.0.7
+
+### Patch Changes
+
+- f4a86b5: 重新修改一个版本的 changeset action
+
 ## 1.0.6
 
 ### Patch Changes
