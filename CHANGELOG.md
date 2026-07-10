@@ -1,5 +1,11 @@
 # changeset_demo
 
+## 1.0.4
+
+### Patch Changes
+
+- 2944301: test new gitflow
+
 ## 1.0.3
 
 ### Patch Changes
