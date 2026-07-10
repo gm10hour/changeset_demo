@@ -1,5 +1,11 @@
 # changeset_demo
 
+## 1.0.6
+
+### Patch Changes
+
+- 26779b4: 修改 changeset action 版本号
+
 ## 1.0.5
 
 ### Patch Changes
